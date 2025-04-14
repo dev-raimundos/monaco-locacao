@@ -88,7 +88,7 @@ const ContactForm = () => {
                     <div className="w-full max-w-md">
                         <button
                             type="submit"
-                            className={`mt-4 w-full text-white text-lg py-2 rounded-full outline outline-1 outline-orange-500 transition duration-300
+                            className={`mt-4 w-full text-white text-lg py-2 rounded-full outline-1 outline-orange-500 transition duration-300
                                 ${processing
                                     ? "bg-gray-500 cursor-not-allowed"
                                     : "bg-gradient-to-r from-orange-500 to-transparent hover:from-yellow-400 hover:to-yellow-600"
