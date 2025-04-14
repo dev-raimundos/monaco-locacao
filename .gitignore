@@ -8,6 +8,7 @@
 /storage/pail
 /vendor
 .rnd
+.vite.config.ts
 .env
 .vs
 .env.backup

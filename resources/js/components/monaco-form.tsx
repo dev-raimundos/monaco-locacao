@@ -1,4 +1,3 @@
-import "./monaco-form.css";
 import { useForm } from "@inertiajs/react";
 import { useState } from "react";
 
@@ -21,96 +20,88 @@ const ContactForm = () => {
             onSuccess: () => {
                 reset();
                 setSuccessMessage("Formulário enviado com sucesso!");
-
-                // Scroll até a mensagem de sucesso
                 setTimeout(() => {
                     const el = document.querySelector(".form-subtitle");
-                    if (el) {
-                        el.scrollIntoView({ behavior: "smooth" });
-                    }
+                    if (el) el.scrollIntoView({ behavior: "smooth" });
                 }, 100);
-
-                // Esconde a mensagem após 15 segundos
                 setTimeout(() => setSuccessMessage(null), 10000);
             },
             preserveScroll: true,
-
         });
     };
 
     return (
-        <div className="contact-form-container">
-            <img className="background-image" src="images/form_background.webp" alt="Background" />
-            <div className="overlay"></div>
-            <div className="contact-form-content">
-                <h2 className="form-title">Como podemos lhe atender?</h2>
-                <p className="form-subtitle">Deixe seus dados que iremos entrar em contato</p>
+        <div className="relative w-full min-h-screen flex justify-center items-center px-4 py-10 overflow-y-auto">
+            <img
+                className="absolute inset-0 w-full h-full object-cover z-0"
+                src="images/form_background.webp"
+                alt="Background"
+            />
+            <div className="absolute inset-0 bg-black/70 z-10" />
+            <div className="relative z-20 text-white text-center lg:text-left w-full max-w-screen-md">
+                <h2 className="text-2xl text-[#c4ce34] pb-2">Como podemos lhe atender?</h2>
+                <p className="form-subtitle text-sm text-gray-300 mb-5">Deixe seus dados que iremos entrar em contato</p>
 
-                {successMessage && <p className="success-message">{successMessage}</p>}
+                {successMessage && (
+                    <p className="bg-green-100 text-green-800 p-3 mb-5 rounded animate-fade-in">
+                        {successMessage}
+                    </p>
+                )}
 
-                <form onSubmit={handleSubmit} className="contact-form">
-                    <input
-                        className="form-input"
-                        type="text"
-                        name="nome"
-                        value={data.nome}
-                        onChange={(e) => setData("nome", e.target.value)} placeholder="Nome" />
-                    {errors.nome && <p className="error">{errors.nome}</p>}
+                <form onSubmit={handleSubmit} className="flex flex-col gap-4 items-center lg:items-start w-full pb-24">
+                    {[
+                        { name: "nome", type: "text", placeholder: "Nome" },
+                        { name: "email", type: "email", placeholder: "Email" },
+                        { name: "telefone", type: "tel", placeholder: "Número de telefone" },
+                        { name: "interesse", type: "text", placeholder: "Seu interesse" },
+                        { name: "empresa", type: "text", placeholder: "Nome da empresa" },
+                        { name: "site", type: "url", placeholder: "Site" },
+                    ].map(({ name, type, placeholder }) => (
+                        <div key={name} className="w-full max-w-md">
+                            <input
+                                className="w-full bg-transparent text-white border-b-2 border-gray-600 focus:border-yellow-400 p-2 outline-none"
+                                type={type}
+                                name={name}
+                                value={data[name as keyof typeof data]}
+                                onChange={(e) => setData(name as keyof typeof data, e.target.value)}
+                                placeholder={placeholder}
+                            />
+                            {errors[name as keyof typeof data] && (
+                                <p className="text-red-400 text-sm">{errors[name as keyof typeof data]}</p>
+                            )}
+                        </div>
+                    ))}
 
-                    <input
-                        className="form-input"
-                        type="email"
-                        name="email"
-                        value={data.email}
-                        onChange={(e) => setData("email", e.target.value)}
-                        placeholder="Email" />
-                    {errors.email && <p className="error">{errors.email}</p>}
+                    <div className="w-full max-w-md">
+                        <h1 className="text-sm text-gray-300 mt-4">Você prefere ligação ou email?</h1>
+                        <select
+                            name="contatoPreferido"
+                            value={data.contatoPreferido}
+                            onChange={(e) => setData("contatoPreferido", e.target.value)}
+                            className="w-full bg-transparent text-white border-b-2 border-gray-600 focus:border-yellow-400 p-2 outline-none"
+                        >
+                            <option value="email" className="bg-gray-800">Email</option>
+                            <option value="telefone" className="bg-gray-800">Telefone</option>
+                        </select>
+                    </div>
 
-                    <input
-                        className="form-input"
-                        type="tel"
-                        name="telefone"
-                        value={data.telefone}
-                        onChange={(e) => setData("telefone", e.target.value)}
-                        placeholder="Número de telefone" />
-                    {errors.telefone && <p className="error">{errors.telefone}</p>}
-
-                    <input
-                        className="form-input"
-                        type="text"
-                        name="interesse"
-                        value={data.interesse}
-                        onChange={(e) => setData("interesse", e.target.value)}
-                        placeholder="Seu interesse" />
-                    {errors.interesse && <p className="error">{errors.interesse}</p>}
-
-                    <input
-                        className="form-input"
-                        type="text"
-                        name="empresa"
-                        value={data.empresa}
-                        onChange={(e) => setData("empresa", e.target.value)}
-                        placeholder="Nome da empresa" />
-                    {errors.empresa && <p className="error">{errors.empresa}</p>}
-
-                    <input
-                        className="form-input"
-                        type="url"
-                        name="site"
-                        value={data.site}
-                        onChange={(e) => setData("site", e.target.value)}
-                        placeholder="Site" />
-                    {errors.site && <p className="error">{errors.site}</p>}
-
-                    <h1 className="form-subtitle">Você prefere ligação ou email?</h1>
-                    <select name="contatoPreferido" value={data.contatoPreferido} onChange={(e) => setData("contatoPreferido", e.target.value)}>
-                        <option value="email">Email</option>
-                        <option value="telefone">Telefone</option>
-                    </select>
-
-                    <button type="submit" className={`submit-button ${processing ? "loading" : ""}`} disabled={processing}>
-                        {processing ? <span className="spinner" /> : "Receba uma proposta \u27F6"}
-                    </button>
+                    <div className="w-full max-w-md">
+                        <button
+                            type="submit"
+                            className={`mt-4 w-full text-white text-lg py-2 rounded-full outline outline-1 outline-orange-500 transition duration-300
+                                ${processing
+                                    ? "bg-gray-500 cursor-not-allowed"
+                                    : "bg-gradient-to-r from-orange-500 to-transparent hover:from-yellow-400 hover:to-yellow-600"
+                                }`}
+                            disabled={processing}
+                        >
+                            {processing ? (
+                                <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin inline-block" />
+                            ) : (
+                                "Receba uma proposta \u27F6"
+                            )}
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
