@@ -11,30 +11,45 @@ type Vehicle = {
 };
 
 type Props = {
-    vehicles?: Vehicle[]; // agora é opcional para evitar erro
+    vehicles?: Vehicle[]; 
 };
 
 type Category = "todos" | "veiculos" | "caminhoes";
 
 export default function Gallery({ vehicles = [] }: Props) {
     const [selectedCategory, setSelectedCategory] = useState<Category>("todos");
+    const [vehiclesState, setVehicles] = useState<Vehicle[]>(vehicles); 
     const scrollRef = useRef<HTMLDivElement>(null);
-    const [scrollPosition, setScrollPosition] = useState(0);
+    const [scrollPosition] = useState(0);
     const [isDragging, setIsDragging] = useState(false);
     const [startX, setStartX] = useState(0);
     const [scrollLeft, setScrollLeft] = useState(0);
 
     useEffect(() => {
-        const handleScroll = () => {
-            if (scrollRef.current) {
-                setScrollPosition(scrollRef.current.scrollLeft);
+        const fetchVehicles = async () => {
+            try {
+                const response = await fetch("/api/vehicles"); 
+                const data = await response.json();
+                console.log("Dados recebidos da API:", data);
+                setVehicles(data); 
+            } catch (error) {
+                console.error("Erro ao buscar veículos:", error);
             }
         };
-        const scrollElement = scrollRef.current;
-        scrollElement?.addEventListener("scroll", handleScroll);
-        return () => scrollElement?.removeEventListener("scroll", handleScroll);
-    }, []);
 
+        fetchVehicles();
+    }, []); 
+
+    const filteredVehicles =
+        selectedCategory === "todos"
+            ? vehiclesState
+            : vehiclesState.filter((v) =>
+                  selectedCategory === "veiculos"
+                      ? v.type === "veiculo"
+                      : v.type === "caminhao"
+              );
+
+    // Função para iniciar o arraste
     const startDragging = (e: React.MouseEvent) => {
         setIsDragging(true);
         setStartX(e.pageX - (scrollRef.current?.offsetLeft || 0));
@@ -54,15 +69,6 @@ export default function Gallery({ vehicles = [] }: Props) {
         const walk = (x - startX) * 1.5;
         scrollRef.current.scrollLeft = scrollLeft - walk;
     };
-
-    const filteredVehicles =
-        selectedCategory === "todos"
-            ? vehicles
-            : vehicles.filter((v) =>
-                  selectedCategory === "veiculos"
-                      ? v.type === "veiculo"
-                      : v.type === "caminhao"
-              );
 
     return (
         <div className="container-gallery-all">
@@ -111,7 +117,7 @@ export default function Gallery({ vehicles = [] }: Props) {
                     {filteredVehicles.map((car) => (
                         <div className="image-container" key={car.id}>
                             <img
-                                src={`/storage/vehicles/${car.image_path}`} // Correção do caminho da imagem
+                               src={`${car.image_path}`}  
                                 alt={car.name}
                                 draggable="false"
                             />
