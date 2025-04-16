@@ -1,4 +1,3 @@
-// CarouselImageManager.tsx
 import { useEffect, useState } from "react";
 import ConfirmationModal from "./ConfirmationModal";
 
@@ -79,20 +78,20 @@ export default function CarouselImageManager() {
             <div className="mb-4">
                 <div className="flex items-center gap-2">
                     <label
-                        htmlFor="fileInput"
-                        className="cursor-pointer bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded"
+                        htmlFor="carouselImageInput"
+                        className="text-sm font-medium cursor-pointer bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded"
                     >
                         Escolher Arquivo
                     </label>
                     <input
-                        id="fileInput"
+                        id="carouselImageInput"
                         type="file"
                         onChange={(e) => setFile(e.target.files?.[0] || null)}
                         className="hidden"
                     />
                     <button
                         onClick={handleUpload}
-                        className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+                        className="text-sm font-medium bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
                     >
                         Upload
                     </button>

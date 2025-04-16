@@ -116,12 +116,12 @@ const VehicleGallery = () => {
     };
 
     return (
-        <div className="p-6 max-w-5xl mx-auto text-gray-900 dark:text-gray-100">
-            <h2 className="text-2xl font-bold mb-4">
+        <div className="p-6 max-w-5xl text-gray-900 dark:text-gray-100">
+            <h2 className="text-xl font-bold mb-4">
                 {editingId ? 'Editar Veículo' : 'Cadastrar Veículo'}
             </h2>
 
-            <form onSubmit={handleSubmit} className="space-y-4 mb-6">
+            <form onSubmit={handleSubmit} className="space-y-4 mb-6 text-sm">
                 <input
                     type="text"
                     name="name"
@@ -152,20 +152,21 @@ const VehicleGallery = () => {
                 </select>
                 <div className="flex items-center gap-2">
                     <label
-                        htmlFor="fileInput"
-                        className="cursor-pointer bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded"
+                        htmlFor="vehicleImageInput"
+                        className="text-sm font-medium cursor-pointer bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded"
                     >
                         Escolher Arquivo
                     </label>
                     <input
-                        id="fileInput"
+                        id="vehicleImageInput"
                         type="file"
+                        name="image"
                         onChange={handleChange}
                         className="hidden"
                     />
                     <button
                         type="submit"
-                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors"
+                        className="text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors"
                     >
                         {editingId ? 'Atualizar' : 'Cadastrar'}
                     </button>
