@@ -8,12 +8,6 @@ import AboutUs from "@/components/monaco-about";
 import ContactForm from "@/components/monaco-form";
 import Footer from "@/components/monaco-footer";
 
-const images = [
-    '/images/banner-1.webp',
-    '/images/banner-2.webp',
-    '/images/banner-3.webp',
-];
-
 type Vehicle = {
     id: number;
     name: string;
@@ -23,7 +17,7 @@ type Vehicle = {
 };
 
 type Props = {
-    vehicles?: Vehicle[]; // também como opcional, por segurança
+    vehicles?: Vehicle[];
 };
 
 export default function LandingPage( { vehicles }: Props) {
@@ -34,7 +28,7 @@ export default function LandingPage( { vehicles }: Props) {
     const formRef = useRef<HTMLDivElement>(null!);
 
     return (
-        <>
+        <div className="bg-white">
             <div ref={headerRef}>
                 <MonacoHeader
                     galleryRef={galleryRef}
@@ -44,7 +38,7 @@ export default function LandingPage( { vehicles }: Props) {
                 />
             </div>
 
-            <Carousel images={images} />
+            <Carousel />
 
             <SectionOne />
 
@@ -66,7 +60,7 @@ export default function LandingPage( { vehicles }: Props) {
                 <Footer headerRef={headerRef} />
             </div>
 
-        </>
+        </div>
     );
 }
 

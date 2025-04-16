@@ -1,12 +1,28 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './monaco-carousel.css';
 
-interface CarouselProps {
-  images: string[];
-}
+type CarouselImage = {
+  id: number;
+  image_path: string;
+};
 
-const Carousel: React.FC<CarouselProps> = ({ images }) => {
+const Carousel: React.FC = () => {
+  const [images, setImages] = useState<CarouselImage[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const fetchImages = async () => {
+      try {
+        const response = await fetch('/api/carousel-images');
+        const data = await response.json();
+        setImages(data);
+      } catch (error) {
+        console.error('Erro ao buscar imagens do carrossel:', error);
+      }
+    };
+
+    fetchImages();
+  }, []);
 
   const prevSlide = () => {
     setCurrentIndex((prevIndex) =>
@@ -20,10 +36,14 @@ const Carousel: React.FC<CarouselProps> = ({ images }) => {
     );
   };
 
+  if (images.length === 0) {
+    return <div className="carousel-loading">Carregando imagens...</div>;
+  }
+
   return (
     <div className="carousel">
       <img
-        src={images[currentIndex]}
+        src={images[currentIndex].image_path}
         alt={`Slide ${currentIndex}`}
         className="carousel-image"
       />
