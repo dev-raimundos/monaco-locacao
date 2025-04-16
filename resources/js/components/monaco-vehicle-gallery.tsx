@@ -61,18 +61,16 @@ const VehicleGallery = () => {
         if (form.name) formData.append('name', form.name);
         if (form.details) formData.append('details', form.details);
         if (form.type) formData.append('type', form.type);
-        if (form.image instanceof File) formData.append('image', form.image);
+        if (form.image instanceof File) {
+            formData.append('image', form.image);
+        }
 
         try {
             if (pendingAction.type === 'create') {
-                await axios.post('/api/vehicles', formData, {
-                    headers: { 'Content-Type': 'multipart/form-data' },
-                });
+                await axios.post('/api/vehicles', formData);
             } else if (pendingAction.type === 'update' && editingId) {
                 formData.append('_method', 'PUT');
-                await axios.post(`/api/vehicles/${editingId}`, formData, {
-                    headers: { 'Content-Type': 'multipart/form-data' },
-                });
+                await axios.post(`/api/vehicles/${editingId}`, formData);
             } else if (pendingAction.type === 'delete' && pendingAction.vehicleId) {
                 await axios.delete(`/api/vehicles/${pendingAction.vehicleId}`);
             }
@@ -100,6 +98,7 @@ const VehicleGallery = () => {
             image: null,
         });
         setEditingId(vehicle.id);
+        window.scrollTo({ top: 300, behavior: 'smooth' });
     };
 
     const handleDelete = (id: number) => {
@@ -118,7 +117,9 @@ const VehicleGallery = () => {
 
     return (
         <div className="p-6 max-w-5xl mx-auto text-gray-900 dark:text-gray-100">
-            <h2 className="text-2xl font-bold mb-4">Galeria de Veículos</h2>
+            <h2 className="text-2xl font-bold mb-4">
+                {editingId ? 'Editar Veículo' : 'Cadastrar Veículo'}
+            </h2>
 
             <form onSubmit={handleSubmit} className="space-y-4 mb-6">
                 <input
@@ -127,7 +128,7 @@ const VehicleGallery = () => {
                     placeholder="Nome"
                     value={form.name || ''}
                     onChange={handleChange}
-                    className="w-full border border-gray-300 dark:border-gray-600 p-2 rounded bg-white dark:bg-gray-800 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-gray-100"
+                    className="w-full border p-2 rounded bg-white dark:bg-gray-800"
                     required
                 />
                 <textarea
@@ -135,40 +136,64 @@ const VehicleGallery = () => {
                     placeholder="Detalhes"
                     value={form.details || ''}
                     onChange={handleChange}
-                    className="w-full border border-gray-300 dark:border-gray-600 p-2 rounded bg-white dark:bg-gray-800 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-gray-100"
+                    className="w-full border p-2 rounded bg-white dark:bg-gray-800"
                     required
                 />
                 <select
                     name="type"
                     value={form.type || ''}
                     onChange={handleChange}
-                    className="w-full border border-gray-300 dark:border-gray-600 p-2 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+                    className="w-full border p-2 rounded bg-white dark:bg-gray-800"
                     required
                 >
                     <option value="">Selecione o tipo</option>
                     <option value="veiculo">Veículo</option>
                     <option value="caminhao">Caminhão</option>
                 </select>
-                <input
-                    type="file"
-                    name="image"
-                    accept="image/*"
-                    onChange={handleChange}
-                    className="w-full text-gray-900 dark:text-gray-100"
-                />
-                <button
-                    type="submit"
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors"
-                >
-                    {editingId ? 'Atualizar' : 'Cadastrar'}
-                </button>
+                <div className="flex items-center gap-2">
+                    <label
+                        htmlFor="fileInput"
+                        className="cursor-pointer bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded"
+                    >
+                        Escolher Arquivo
+                    </label>
+                    <input
+                        id="fileInput"
+                        type="file"
+                        onChange={handleChange}
+                        className="hidden"
+                    />
+                    <button
+                        type="submit"
+                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors"
+                    >
+                        {editingId ? 'Atualizar' : 'Cadastrar'}
+                    </button>
+                </div>
+
+                {form.image && (
+                    <p className="mt-2 text-sm text-gray-700 dark:text-gray-200">
+                        Arquivo selecionado: <span className="font-medium">{form.image.name}</span>
+                    </p>
+                )}
+
+                {editingId && (
+                    <button
+                        type="button"
+                        onClick={resetForm}
+                        className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded transition-colors"
+                    >
+                        Cancelar
+                    </button>
+                )}
+
             </form>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 {vehicles.map((vehicle) => (
                     <div
                         key={vehicle.id}
-                        className="border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 rounded shadow p-4 text-gray-900 dark:text-gray-100"
+                        className="border bg-white dark:bg-gray-900 rounded shadow p-4"
                     >
                         {vehicle.image_path && (
                             <img
@@ -178,18 +203,18 @@ const VehicleGallery = () => {
                             />
                         )}
                         <h3 className="text-lg font-semibold">{vehicle.name}</h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-300">{vehicle.details}</p>
-                        <p className="text-xs mt-1 italic text-gray-500 dark:text-gray-400">{vehicle.type}</p>
+                        <p className="text-sm">{vehicle.details}</p>
+                        <p className="text-xs mt-1 italic text-gray-500">{vehicle.type}</p>
                         <div className="mt-3 flex gap-2">
                             <button
                                 onClick={() => handleEdit(vehicle)}
-                                className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded transition-colors"
+                                className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded"
                             >
                                 Editar
                             </button>
                             <button
                                 onClick={() => handleDelete(vehicle.id)}
-                                className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded transition-colors"
+                                className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded"
                             >
                                 Deletar
                             </button>
