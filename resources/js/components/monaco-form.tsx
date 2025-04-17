@@ -16,6 +16,12 @@ const ContactForm = () => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+
+        // Garante que o site começa com https://
+        if (data.site && !data.site.startsWith("http")) {
+            setData("site", `https://${data.site}`);
+        }
+
         post(route("contact.store"), {
             onSuccess: () => {
                 reset();
@@ -28,6 +34,11 @@ const ContactForm = () => {
             },
             preserveScroll: true,
         });
+    };
+    const handleSiteFocus = () => {
+        if (data.site.trim() !== "" && !data.site.startsWith("http")) {
+            setData("site", `https://${data.site}`);
+        }
     };
 
     return (
@@ -55,7 +66,7 @@ const ContactForm = () => {
                         { name: "telefone", type: "tel", placeholder: "Número de telefone" },
                         { name: "interesse", type: "text", placeholder: "Seu interesse" },
                         { name: "empresa", type: "text", placeholder: "Nome da empresa" },
-                        { name: "site", type: "url", placeholder: "Site" },
+                        { name: "site", type: "text", placeholder: "Site (ex: www.seusite.com)" },
                     ].map(({ name, type, placeholder }) => (
                         <div key={name} className="w-full max-w-md">
                             <input
@@ -65,6 +76,7 @@ const ContactForm = () => {
                                 value={data[name as keyof typeof data]}
                                 onChange={(e) => setData(name as keyof typeof data, e.target.value)}
                                 placeholder={placeholder}
+                                onFocus={name === "site" ? handleSiteFocus : undefined}
                             />
                             {errors[name as keyof typeof data] && (
                                 <p className="text-red-400 text-sm">{errors[name as keyof typeof data]}</p>
