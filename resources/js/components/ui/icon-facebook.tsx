@@ -1,11 +1,11 @@
 type IconProps = {
-    className?: string;
+  className?: string;
 };
 
 function FacebookLogo({ className = "" }: IconProps) {
-    return (
-        <img src="/images/facebook.svg" alt="Facebook Logo" className={`social-icon ${className}`} />
-    );
+  return (
+    <img src="/images/facebook.svg" alt="Facebook Logo" className={`social-icon ${className}`} />
+  );
 }
 
 

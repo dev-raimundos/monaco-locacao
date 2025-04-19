@@ -1,11 +1,11 @@
 type IconProps = {
-    className?: string;
-  };
+  className?: string;
+};
 
-  function SectionVerticalLine({ className = "" }: IconProps) {
-    return (
-      <img src="/images/line-vertical-section.svg" className={`${className}`} />
-    );
-  }
+function SectionVerticalLine({ className = "" }: IconProps) {
+  return (
+    <img src="/images/line-vertical-section.svg" className={`${className}`} />
+  );
+}
 
-  export default SectionVerticalLine;
+export default SectionVerticalLine;

@@ -1,11 +1,11 @@
 type IconProps = {
-    className?: string;
-  };
+  className?: string;
+};
 
-  function ArrowHeader({ className = "" }: IconProps) {
-    return (
-      <img src="/images/arrow_header.svg" className={`${className}`} />
-    );
-  }
+function ArrowHeader({ className = "" }: IconProps) {
+  return (
+    <img src="/images/arrow_header.svg" className={`${className}`} />
+  );
+}
 
-  export default ArrowHeader;
+export default ArrowHeader;
